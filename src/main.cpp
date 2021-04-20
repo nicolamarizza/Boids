@@ -1,5 +1,6 @@
 #include <SFML/Graphics.hpp>
 #include <LALG/Vector2.hpp>
+#include <BoidShape.hpp>
 using namespace sf;
 
 int main()

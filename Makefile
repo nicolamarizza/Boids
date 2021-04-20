@@ -8,7 +8,7 @@ LIBRARIES := -lsfml-graphics -lsfml-window -lsfml-system -llalg
 EXECUTABLE := boids
 
 
-$(BIN)/$(EXECUTABLE): $(SRC)/*.cpp
+$(BIN)/$(EXECUTABLE): $(SRC)/*.cpp $(INCLUDE)/*.hpp
 	$(CC) $(CFLAGS) $(DBG) -I$(INCLUDE) $^ -o $@ $(LIBRARIES)
 
 clear:
