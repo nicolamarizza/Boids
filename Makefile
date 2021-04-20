@@ -4,12 +4,12 @@ DBG := -g
 SRC := src
 INCLUDE := include
 BIN := bin
-LIBRARIES := -llalg -lsfml-system -lsfml-window -lsfml-graphics
+LIBRARIES := -lsfml-graphics -lsfml-window -lsfml-system -llalg
 EXECUTABLE := boids
 
 
 $(BIN)/$(EXECUTABLE): $(SRC)/*.cpp
-	$(CC) $(CFLAGS) $(DBG) -I$(INCLUDE) -o $@ $(LIBRARIES)
+	$(CC) $(CFLAGS) $(DBG) -I$(INCLUDE) $^ -o $@ $(LIBRARIES)
 
 clear:
 	rm $(BIN)/*
