@@ -13,7 +13,7 @@ Canvas::Canvas(int width, int height)
 void Canvas::SpawnBoidAt(int x, int y)
 {
 	auto pos = Vector2f(x,y);
-	SpawnedBoids.push_back(Boid(pos));
+	SpawnedBoids.push_back(Boid(81, pos));
 	QT.InsertAt(pos, &SpawnedBoids.back());
 }
 void Canvas::Simulate()
@@ -27,6 +27,8 @@ void Canvas::Simulate()
 
 		Window.clear();
 		UpdateBoids();
+		RefreshQtree();
+		AssignFlocks();
 		Draw();
 		Window.display();
 	}
@@ -54,4 +56,9 @@ void Canvas::RefreshQtree()
 	QT.Clear();
 	for(auto& boid : SpawnedBoids)
 		QT.InsertAt(boid.GetPosition(), &boid);
+}
+void Canvas::AssignFlocks()
+{
+	for(auto& boid : SpawnedBoids)
+		boid.AssignToFlock(QT.GetClosestTo(boid.GetPosition(), boid.GetPerception()));
 }

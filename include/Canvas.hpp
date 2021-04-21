@@ -14,6 +14,7 @@ public:
 private:
 	void UpdateBoids();
 	void RefreshQtree();
+	void AssignFlocks();
 
 	std::vector<Boid> SpawnedBoids = std::vector<Boid>();
 	sf::RenderWindow Window;
