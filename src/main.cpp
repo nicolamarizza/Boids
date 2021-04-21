@@ -1,22 +1,19 @@
 #include <SFML/Graphics.hpp>
 #include <LALG/Vector2.hpp>
 #include <BoidShape.hpp>
-using namespace sf;
+#include <Boid.hpp>
+#include <Canvas.hpp>
 
+using namespace sf;
+using namespace std;
 int main()
 {
-	RenderWindow window(VideoMode(800,800), "Boids");
+	Canvas canvas(800, 800);
+	for(int x = 0; x <= 800; x+=20)
+		for(int y = 0; y <= 800; y+=20)
+			canvas.SpawnBoidAt(x,y);
 
-	while(window.isOpen())
-	{
-		Event e;
-		while(window.pollEvent(e))
-			if(e.type == Event::Closed)
-				window.close();
-
-		window.clear();
-		window.display();
-	}
+	canvas.Simulate();
 
 	return 0;
 }

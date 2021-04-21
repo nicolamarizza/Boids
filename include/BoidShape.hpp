@@ -1,5 +1,7 @@
-#include <SFML/Graphics.hpp>
+#ifndef BOIDSHAPE_HPP
+#define BOIDSHAPE_HPP
 
+#include <SFML/Graphics.hpp>
 class BoidShape : public sf::Shape
 {
 public :
@@ -10,3 +12,5 @@ public :
 private :
     int Length;
 };
+
+#endif
