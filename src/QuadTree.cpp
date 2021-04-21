@@ -5,22 +5,21 @@ using namespace sf;
 
 QuadTree::QuadTree(Vector2f upperLeft, Vector2f lowerRight, size_t capacity) :
 	Capacity{capacity},
-	Boids(std::vector<Boid>()),
+	P_Boids(std::vector<Boid*>()),
 	SubSections(std::vector<QuadTree>()),
 	UpperLeft{upperLeft},
 	LowerRight{lowerRight}
 {
 
 }
-void QuadTree::InsertAt(int x, int y)
+void QuadTree::InsertAt(sf::Vector2f pos, Boid* p_boid)
 {
-	Vector2f pos = Vector2f(x,y);
 	if(!IsWithinBounds(pos))
 		return;
 
-	if(Boids.size() < Capacity)
+	if(P_Boids.size() < Capacity)
 	{
-		Boids.push_back(Boid(pos));
+		P_Boids.push_back(p_boid);
 		return;
 	}
 
@@ -51,25 +50,30 @@ void QuadTree::InsertAt(int x, int y)
 	}
 
 	for(auto& subsection : SubSections)
-		subsection.InsertAt(x,y);
+		subsection.InsertAt(pos, p_boid);
 }
-std::vector<Boid> QuadTree::GetClosestTo(sf::Vector2f pos, float distance)
+std::vector<Boid*> QuadTree::GetClosestTo(sf::Vector2f pos, float distance)
 {
-	std::vector<Boid> queryResult = std::vector<Boid>();
+	std::vector<Boid*> queryResult = std::vector<Boid*>();
 	GetClosestToRecursive(queryResult, pos, distance);
 	return queryResult;
 }
-std::vector<Boid> QuadTree::GetAll()
+std::vector<Boid*> QuadTree::GetAll()
 {
 	return GetClosestTo(GetCenter(), UIMath::Distance(UpperLeft, LowerRight));
 }
-
-
+void QuadTree::Clear()
+{
+	SubSections.clear();
+	P_Boids.clear();
+}
+sf::Vector2f QuadTree::GetUpperLeftBound() {return UpperLeft;}
+sf::Vector2f QuadTree::GetLowerRightBound() {return LowerRight;}
 sf::Vector2f QuadTree::GetCenter()
 {
 	return UpperLeft + (LowerRight - UpperLeft) / 2.f;
 }
-void QuadTree::GetClosestToRecursive(std::vector<Boid>& cumulativeResult, sf::Vector2f pos, float distance)
+void QuadTree::GetClosestToRecursive(std::vector<Boid*>& cumulativeResult, sf::Vector2f pos, float distance)
 {
 	if(!Intersects(pos, distance))
 		return;
@@ -77,9 +81,9 @@ void QuadTree::GetClosestToRecursive(std::vector<Boid>& cumulativeResult, sf::Ve
 	for(auto& subSection : SubSections)
 		subSection.GetClosestToRecursive(cumulativeResult, pos, distance);
 
-	for(auto& boid : Boids)
-		if(UIMath::Distance(boid.GetPosition(), pos) <= distance)
-			cumulativeResult.push_back(boid);
+	for(auto& p_boid : P_Boids)
+		if(UIMath::Distance(p_boid->GetPosition(), pos) <= distance)
+			cumulativeResult.push_back(p_boid);
 }
 bool QuadTree::Intersects(sf::Vector2f pos, float distance)
 {
@@ -98,4 +102,16 @@ bool QuadTree::IsWithinBounds(sf::Vector2f pos)
 		pos.y >= UpperLeft.y &&
 		pos.y <= LowerRight.y
 	);
+}
+std::vector<QuadTree> QuadTree::GetSubsections()
+{
+	std::vector<QuadTree> result = std::vector<QuadTree>();
+	GetSubsectionsRecursive(result);
+	return result;
+}
+void QuadTree::GetSubsectionsRecursive(std::vector<QuadTree>& cumulativeResult)
+{
+	for(auto& subs : SubSections)
+		subs.GetSubsectionsRecursive(cumulativeResult);
+	cumulativeResult.push_back(*this);
 }
