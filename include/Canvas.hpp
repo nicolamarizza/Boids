@@ -12,10 +12,11 @@ public:
 	void Simulate();
 	void Draw();
 private:
-	void UpdateBoids();
+	void UpdateBoidsPositions();
 	void RefreshQtree();
 	void AssignFlocks();
-
+	void UpdateBoidsPaths();
+	void DrawQTree();
 	std::vector<Boid> SpawnedBoids = std::vector<Boid>();
 	sf::RenderWindow Window;
 	QuadTree QT;
