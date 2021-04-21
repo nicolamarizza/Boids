@@ -11,7 +11,10 @@ public:
 	Boid(sf::Vector2f pos);
 
 	sf::Vector2f GetPosition();
+	void Update(float elapsedSeconds);
 private:
+	float Perception {60};
+	sf::Vector2f Separation(float elapsedSeconds);
 	sf::Vector2f Position;
 };
 

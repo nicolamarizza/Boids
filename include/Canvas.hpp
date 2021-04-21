@@ -12,8 +12,13 @@ public:
 	void Simulate();
 	void Draw();
 private:
+	void UpdateBoids();
+	void RefreshQtree();
+
+	std::vector<Boid> SpawnedBoids = std::vector<Boid>();
 	sf::RenderWindow Window;
 	QuadTree QT;
+	sf::Clock LastRefresh;
 };
 
 #endif
