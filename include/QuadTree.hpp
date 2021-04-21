@@ -14,11 +14,15 @@ public:
 	std::vector<Boid*> GetClosestTo(sf::Vector2f pos, float distance);
 	std::vector<Boid*> GetAll();
 	void Clear();
+	std::vector<QuadTree> GetSubsections();
+	sf::Vector2f GetUpperLeftBound();
+	sf::Vector2f GetLowerRightBound();
 private:
 	sf::Vector2f GetCenter();
 	void GetClosestToRecursive(std::vector<Boid*>& cumulativeResult, sf::Vector2f pos, float distance);
 	bool Intersects(sf::Vector2f pos, float distance);
 	bool IsWithinBounds(sf::Vector2f pos);
+	void GetSubsectionsRecursive(std::vector<QuadTree>& cumulativeResult);
 
 	size_t Capacity;
 	std::vector<Boid*> P_Boids;

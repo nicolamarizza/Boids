@@ -67,7 +67,8 @@ void QuadTree::Clear()
 	SubSections.clear();
 	P_Boids.clear();
 }
-
+sf::Vector2f QuadTree::GetUpperLeftBound() {return UpperLeft;}
+sf::Vector2f QuadTree::GetLowerRightBound() {return LowerRight;}
 sf::Vector2f QuadTree::GetCenter()
 {
 	return UpperLeft + (LowerRight - UpperLeft) / 2.f;
@@ -101,4 +102,16 @@ bool QuadTree::IsWithinBounds(sf::Vector2f pos)
 		pos.y >= UpperLeft.y &&
 		pos.y <= LowerRight.y
 	);
+}
+std::vector<QuadTree> QuadTree::GetSubsections()
+{
+	std::vector<QuadTree> result = std::vector<QuadTree>();
+	GetSubsectionsRecursive(result);
+	return result;
+}
+void QuadTree::GetSubsectionsRecursive(std::vector<QuadTree>& cumulativeResult)
+{
+	for(auto& subs : SubSections)
+		subs.GetSubsectionsRecursive(cumulativeResult);
+	cumulativeResult.push_back(*this);
 }
